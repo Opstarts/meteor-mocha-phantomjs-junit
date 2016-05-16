@@ -2,7 +2,7 @@ Package.describe({
   name: "linguahouse:mocha-phantomjs-junit",
   summary: "Run package or app tests with Mocha+PhantomJS and report all results in the server console or JUnit XML format",
   git: "https://github.com/linguahouse/meteor-mocha-phantomjs-junit.git",
-  version: '0.1.1',
+  version: '1.0.0',
   testOnly: true
 });
 
