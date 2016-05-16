@@ -60,8 +60,9 @@ A good best practice is to define these commands as run scripts in your app's `p
 
 ```json
 "scripts": {
-  "test": "meteor test --once --driver-package linguahouse:mocha-phantomjs-junit",
-  "test:watch": "TEST_WATCH=1 meteor test --driver-package linguahouse:mocha-phantomjs-junit",
+  "test": "SERVER_TEST_REPORTER=junit CLIENT_TEST_REPORTER=json meteor test --once --driver-package linguahouse:mocha-phantomjs-junit",
+  "test:watch": "TEST_WATCH=1 SERVER_TEST_REPORTER=junit CLIENT_TEST_REPORTER=json meteor test --driver-package linguahouse:mocha-phantomjs-junit",
+  "test:fullapp": "SERVER_TEST_REPORTER=junit CLIENT_TEST_REPORTER=json meteor test --once --driver-package linguahouse:mocha-phantomjs-junit",
   "start": "meteor run"
 }
 ```
