@@ -54,6 +54,20 @@ CLIENT_TEST_REPORTER="tap" meteor test --once --driver-package linguahouse:mocha
 
 Because of the differences between client and server code, not all reporters will work as client reporters. "spec" and "tap" are confirmed to work.
 
+## Output file
+
+To specify the output file for server tests, use option `MOCHA_FILE`
+
+```bash
+SERVER_TEST_REPORTER=junit MOCHA_FILE=test-reports/server.xml meteor test --once  --driver-package linguahouse:mocha-phantomjs-junit
+```
+
+To specify the output file for client tests, use option `MOCHA_FILE_CLIENT`
+
+```bash
+SERVER_TEST_REPORTER=junit CLIENT_TEST_REPORTER=json MOCHA_FILE=test-reports/server.xml MOCHA_FILE_CLIENT=test-reports/client.xml meteor test --once  --driver-package linguahouse:mocha-phantomjs-junit
+```
+
 ## NPM Scripts
 
 A good best practice is to define these commands as run scripts in your app's `package.json` file. For example:
