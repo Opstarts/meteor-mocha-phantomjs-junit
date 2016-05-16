@@ -6,11 +6,15 @@ This package runs your client tests within a PhantomJS page. If you prefer a dif
 
 Includes a JUnit XML format reporter. Run with "junit" reporter to enable junit output
 
+```bash
 SERVER_TEST_REPORTER="junit" MOCHA_FILE=./test-reports.xml
+```
 
 Additionally, if you wish to route client test reports to junit too, set the reporter to "json".
 
+```bash
 SERVER_TEST_REPORTER=junit CLIENT_TEST_REPORTER=json meteor test --once --driver-package linguahouse:mocha-phantomjs-junit
+```
 
 ## Installation
 
