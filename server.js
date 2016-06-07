@@ -65,12 +65,15 @@ function exitIfDone(type, failures) {
         // reformat for JUnit reporter
 
         var rep = new MochaJUnitReporter({
+          stats: {},
           on: function() {}
         });
         rep._options.mochaFile = process.env.MOCHA_FILE_CLIENT || 'client-test-results.xml';
 
         var testsuites = [];
         var durationoffset = 0;
+        var totalfailures = 0;
+        var totalskipped = 0;
         var teststart = new Date(json.stats.start).getTime();
         var last_suite_title = null;
         // make a root suite first
@@ -87,7 +90,7 @@ function exitIfDone(type, failures) {
         json.tests.forEach(function(test) {
           var suite_title = test.fullTitle.split(' ' + test.title);
           //
-          if (last_suite_title != suite_title) {
+          if (last_suite_title != suite_title[0]) {
             testsuites.push({
               testsuite: [{
                 _attr: {
@@ -100,25 +103,37 @@ function exitIfDone(type, failures) {
           }
           var attr = {
             name: test.fullTitle,
-            time: test.duration / 1000,
+            time: test.duration ? test.duration / 1000 : 0,
             classname: test.title
           };
           var testcase = [{
             _attr: attr
           }];
-          if (JSON.stringify(test.err) != '{}') {
+          if (test.err && test.err.hasOwnProperty('message')) {
             testcase.push({
               failure: {
-                _cdata: rep.removeInvalidCharacters(test.err.stack)
+                _cdata: rep.removeInvalidCharacters(test.err.message + "\n" + test.err.sourceURL + "\n" + "Line: " + test.err.line + "\n" + test.err.stack)
               }
             });
+            totalfailures++;
+          } else if (!test.hasOwnProperty('duration')) {
+            testcase.push({
+              skipped: { }
+            });
+            totalskipped++;
           }
           testsuites[testsuites.length-1].testsuite.push({
             testcase: testcase
           });
-          durationoffset += test.duration;
+          if (test.duration) {
+            durationoffset += test.duration;
+          }
           testsuites[testsuites.length-1].testsuite[0]._attr.tests++;
+          last_suite_title = suite_title[0];
         });
+
+        rep._runner.stats.pending = totalskipped;
+        rep._runner.stats.failures = totalfailures;
 
         //// Flush XML
         rep.flush(testsuites);
